@@ -16,7 +16,7 @@ TagManager:
   - 
   - 
   - GrassLayer
-  - 
+  - ObstacleLayer
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: Character
     uniqueID: 2342589287
+    locked: 0
+  - name: ForeGround
+    uniqueID: 740098671
     locked: 0

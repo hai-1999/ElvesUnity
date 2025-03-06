@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
+    public LayerMask buildingLayer;
+    public LayerMask grassLayer;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();//从当前游戏对象获取动画控制器组件
@@ -34,7 +37,10 @@ public class PlayerController : MonoBehaviour
                 targetPos.x += input.x;//计算移动后的X轴坐标
                 targetPos.y += input.y;//计算移动后的Y轴坐标
 
-                StartCoroutine(Move(targetPos));//开启协程
+                if (IsWalkable(targetPos))
+                {
+                    StartCoroutine(Move(targetPos));//开启协程
+                }
             }
         }
         animator.SetBool("isMoving", isMoving);
@@ -52,5 +58,29 @@ public class PlayerController : MonoBehaviour
         }
         //transform.position = targetPos;
         isMoving = false;
+
+        CheckForEncounter();
+    }
+
+    //遇到障碍物物禁止移动函数
+    private bool IsWalkable(Vector3 targetPos)
+    {
+        if (Physics2D.OverlapCircle(targetPos, 0.2f, buildingLayer) != null)//检测角色移动后位置半径0.2的圆形范围内是否有属于障碍物图层的碰撞体
+        {
+            return false;
+        }
+        return true;
+    }
+
+    //草丛遇敌函数
+    private void CheckForEncounter()
+    {
+        if (Physics2D.OverlapCircle(transform.position, 0.2f, grassLayer) != null)
+        {
+            if (Random.Range(1, 100) <= 20)//20%的草丛遇敌
+            {
+                Debug.Log("遇敌 ！！");
+            }
+        }
     }
 }
