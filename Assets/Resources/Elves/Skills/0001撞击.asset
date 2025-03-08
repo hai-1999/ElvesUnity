@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "0001\u649E\u51FB"
   m_EditorClassIdentifier: 
   id: 0001
-  skillName: 
+  skillName: "\u649E\u51FB"
   description: 
   type: 1
   power: 30

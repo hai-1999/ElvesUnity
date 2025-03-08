@@ -9,14 +9,14 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] int level;
     [SerializeField] bool isPlayerUnit;
 
-    public Elf elves { get; set; }
+    public Elf elf { get; set; }
 
     public void SetUp()
     {
-        elves = new Elf(baseElves, level);//通过baseElves和level创建新的Elves
+        elf = new Elf(baseElves, level);//通过baseElves和level创建新的Elves
         if (isPlayerUnit)
-            GetComponent<Image>().sprite = elves.baseElf.LeftSprite;
+            GetComponent<Image>().sprite = elf.baseElf.LeftSprite;
         else
-            GetComponent<Image>().sprite = elves.baseElf.RightSprite;
+            GetComponent<Image>().sprite = elf.baseElf.RightSprite;
     }
 }
