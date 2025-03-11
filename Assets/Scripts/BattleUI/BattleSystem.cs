@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 //枚举 对战过程中的状态
 public enum BattleState {Start, PlayerActionSelection, PlayerSkillSelection, EnemySkillSelection, Busy}
-
 
 public class BattleSystem : MonoBehaviour
 {
@@ -25,10 +25,10 @@ public class BattleSystem : MonoBehaviour
 
     private void Start()
     {
-        dialogBox.EnableDialogText(true);
+        dialogBox.EnableDialogText(true);//对话框文本可见
 
-        dialogBox.EnableActionSelector(false);
-        dialogBox.EnableSkillSelector(false);
+        dialogBox.EnableActionSelector(false);//动作选择器不可见
+        dialogBox.EnableSkillSelector(false);//技能选择器不可见
 
         StartCoroutine(SetupBattle());
     }
@@ -56,26 +56,66 @@ public class BattleSystem : MonoBehaviour
         PlayerAction();//开始玩家选择动作
     }
 
-
     void PlayerAction()
     {
         state = BattleState.PlayerActionSelection;//战斗状态设置为“玩家动作选择”
 
         StartCoroutine(dialogBox.TypeDialog($"选择一个动作！！"));
         dialogBox.EnableActionSelector(true);//动作选择器开启
-
     }
 
     void PlayerSkill()
     {
         state = BattleState.PlayerSkillSelection;//战斗状态设置为“玩家技能选择”
 
-        dialogBox.EnableDialogText(false);
-        dialogBox.EnableActionSelector(false);
+        dialogBox.EnableDialogText(false);//对话框文本不可见
+        dialogBox.EnableActionSelector(false);//动作选择器不可见
         
         dialogBox.EnableSkillSelector(true);//技能选择器开启
     }
 
+    IEnumerator PerformPlayerSKill()
+    {
+        var skill = playerUnit.elf.skills[currentSkill];//确定选择的技能
+
+        yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
+        yield return new WaitForSeconds(1f);
+
+        bool isFainted= enemyUnit.elf.TakeDamage(skill, playerUnit.elf);
+
+        yield return enemyHud.UpdateHp();
+
+        if(isFainted)
+        {
+            yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}倒下了");
+        }
+        else
+        {
+            StartCoroutine(EnemySkill());//开始敌人选择动作
+        }      
+    }
+
+    IEnumerator EnemySkill()
+    {
+        state = BattleState.EnemySkillSelection;//战斗状态设置为“敌人技能选择”
+
+        var skill = enemyUnit.elf.GetRandomSkill();
+
+        yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
+        yield return new WaitForSeconds(1f);
+
+        bool isFainted = playerUnit.elf.TakeDamage(skill, enemyUnit.elf);
+        yield return playerHud.UpdateHp();
+
+        if (isFainted)
+        {
+            yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}倒下了");
+        }
+        else
+        {
+            PlayerAction();//开始玩家选择动作
+        }
+    }
 
     void HandleActionSelection()//处理动作选择
     {
@@ -142,5 +182,13 @@ public class BattleSystem : MonoBehaviour
                 currentSkill -=2;
         }
         dialogBox.UpdateSKillSelection(currentSkill, playerUnit.elf.skills[currentSkill]);
+
+        if (Input.GetKeyDown(KeyCode.Space))//按“空格”确定
+        {
+            dialogBox.EnableSkillSelector(false);
+            dialogBox.EnableDialogText(true);
+
+            StartCoroutine(PerformPlayerSKill());//执行玩家选择技能
+        }
     }
 }

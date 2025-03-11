@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Elf
@@ -61,6 +62,30 @@ public class Elf
     public int Speed
     {
         get { return Mathf.FloorToInt((baseElf.BaseStatsSpeed * level) / 100f) + 5; }
+    }
+
+
+    public bool TakeDamage(Skill skill, Elf attacker)//伤害计算，返回是否倒下
+    {
+        float modifiers = Random.Range(0.85f,1f);
+        float a = (2 * attacker.level + 10) / 250f;
+        float b = a * skill.Base.Power * ((float)attacker.Attack / Denfense) + 2;
+        int damage = Mathf.FloorToInt(b * modifiers);
+
+        hp -= damage;
+        if(hp<=0)//hp最小为0
+        {
+            hp = 0;
+            return true;           
+        }
+        return false;
+    }
+
+    public Skill GetRandomSkill()
+    {
+        int r = Random.Range(0, skills.Count);
+        return skills[r];
+        
     }
 }
 
