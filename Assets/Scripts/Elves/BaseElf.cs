@@ -114,21 +114,4 @@ public class LearnableSkill
 }
 
 //枚举 ELves和Skills的属性
-public enum ElvesType
-{ 
-    None,
-    普通,   
-    火,
-    水,
-    草, 
-    电, 
-    冰,
-    飞行,
-    地面,
-    战斗,
-    超能,
-    暗影,
-    光,
-    机械,
-    龙,
-}
+

@@ -9,7 +9,6 @@ public enum BattleState {Start, PlayerActionSelection, PlayerSkillSelection, Ene
 
 public class BattleSystem : MonoBehaviour
 {
-
     [SerializeField] BattleUnit enemyUnit;
     [SerializeField] BattleHud enemyHud;
 
@@ -51,7 +50,6 @@ public class BattleSystem : MonoBehaviour
         dialogBox.SetSkillNames(playerUnit.elf.skills);
 
         yield return dialogBox.TypeDialog($"一个野生的{playerUnit.elf.baseElf.ElfName}出现了！！");
-        yield return new WaitForSeconds(1f);
 
         PlayerAction();//开始玩家选择动作
     }
@@ -76,16 +74,18 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator PerformPlayerSKill()
     {
+        state = BattleState.Busy;
         var skill = playerUnit.elf.skills[currentSkill];//确定选择的技能
 
         yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
         yield return new WaitForSeconds(1f);
 
-        bool isFainted= enemyUnit.elf.TakeDamage(skill, playerUnit.elf);
+        var damageDetails= enemyUnit.elf.TakeDamage(skill, playerUnit.elf);
 
         yield return enemyHud.UpdateHp();
+        yield return ShowDamageDetails(damageDetails);
 
-        if(isFainted)
+        if (damageDetails.Fainted)
         {
             yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}倒下了");
         }
@@ -93,6 +93,17 @@ public class BattleSystem : MonoBehaviour
         {
             StartCoroutine(EnemySkill());//开始敌人选择动作
         }      
+    }
+
+    IEnumerator ShowDamageDetails(DamageDetails damageDetails)
+    {
+        if(damageDetails.Critical>1f)
+            yield return dialogBox.TypeDialog("暴击了！");
+
+        if (damageDetails.Type > 1)
+            yield return dialogBox.TypeDialog("效果拔群！");
+        else if (damageDetails.Type < 1)
+            yield return dialogBox.TypeDialog("效果一般！");
     }
 
     IEnumerator EnemySkill()
@@ -104,10 +115,11 @@ public class BattleSystem : MonoBehaviour
         yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
         yield return new WaitForSeconds(1f);
 
-        bool isFainted = playerUnit.elf.TakeDamage(skill, enemyUnit.elf);
+        var damageDetails = playerUnit.elf.TakeDamage(skill, enemyUnit.elf);
         yield return playerHud.UpdateHp();
+        yield return ShowDamageDetails(damageDetails);
 
-        if (isFainted)
+        if (damageDetails.Fainted)
         {
             yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}倒下了");
         }

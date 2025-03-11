@@ -6,11 +6,6 @@ public class HpBar : MonoBehaviour
 {
     [SerializeField] GameObject health;
 
-    //private void Start()
-    //{
-    //    health.transform.localScale = new Vector3(0.5f, 1f);
-    //}
-
     //控制血条变化
     public void SetHp(float hpNormalized)
     {
@@ -29,7 +24,6 @@ public class HpBar : MonoBehaviour
             yield return null;//暂停等下一帧
         }
         health.transform.localScale = new Vector3(newHp, 1f);
-
     }
 
 }

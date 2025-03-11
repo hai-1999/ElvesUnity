@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro.EditorUtilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class Elf
 {
@@ -64,31 +65,53 @@ public class Elf
         get { return Mathf.FloorToInt((baseElf.BaseStatsSpeed * level) / 100f) + 5; }
     }
 
-
-    public bool TakeDamage(Skill skill, Elf attacker)//伤害计算，返回是否倒下
+    public DamageDetails TakeDamage(Skill skill, Elf attacker)//伤害计算，返回是否倒下
     {
-        float modifiers = Random.Range(0.85f,1f);
-        float a = (2 * attacker.level + 10) / 250f;
-        float b = a * skill.Base.Power * ((float)attacker.Attack / Denfense) + 2;
-        int damage = Mathf.FloorToInt(b * modifiers);
 
-        hp -= damage;
-        if(hp<=0)//hp最小为0
+        float baseDamage = skill.Base.Power * ((float)attacker.Attack / Denfense) + 2;//基础伤害
+
+        float level = (2 * attacker.level + 10) / 250f;//等级加成
+        float type = TypeChart.GetEffectiveness(skill.Base.Type, this.baseElf.Type1)
+                   * TypeChart.GetEffectiveness(skill.Base.Type, this.baseElf.Type2);//属性克制
+
+        float critical = 1f;
+        if (Random.value * 100f <= 6.25f)//是否暴击
+            critical = 2f;
+
+        float modifiers = Random.Range(0.85f, 1f);//数值修正
+
+        float finalDamage = baseDamage * level * type * critical * modifiers;
+        hp -= Mathf.FloorToInt(finalDamage);
+
+        var damageDetails = new DamageDetails()
+        {
+            Type = type,
+            Critical = critical,
+            Fainted=false
+        };
+
+
+        if (hp<=0)//hp最小为0
         {
             hp = 0;
-            return true;           
+            damageDetails.Fainted = true;
         }
-        return false;
+        return damageDetails;
     }
+
 
     public Skill GetRandomSkill()
     {
         int r = Random.Range(0, skills.Count);
-        return skills[r];
-        
+        return skills[r];      
     }
 }
 
 
 
-
+public class DamageDetails
+{
+    public bool Fainted { get; set; }
+    public float Critical { get; set; }
+    public float Type { get; set; }
+}

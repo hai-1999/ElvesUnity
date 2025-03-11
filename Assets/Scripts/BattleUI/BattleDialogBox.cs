@@ -35,6 +35,7 @@ public class BattleDialogBox : MonoBehaviour
             dialogText.text += letter;
             yield return new WaitForSeconds(1f /30);
         }
+        yield return new WaitForSeconds(0.5f);
     }
 
     public void EnableDialogText(bool enabled)
@@ -73,11 +74,9 @@ public class BattleDialogBox : MonoBehaviour
             else
                skillTexts[i].color = Color.black;
         }
-
         ppText.text=$"PP {skill.PP }/{skill.Base.PP}";
         typeText.text =skill.Base.Type.ToString();
     }
-
 
     public void  SetSkillNames(List<Skill> skills)
     {
