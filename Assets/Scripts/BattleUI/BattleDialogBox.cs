@@ -74,6 +74,7 @@ public class BattleDialogBox : MonoBehaviour
             else
                skillTexts[i].color = Color.black;
         }
+
         ppText.text=$"PP {skill.PP }/{skill.Base.PP}";
         typeText.text =skill.Base.Type.ToString();
     }

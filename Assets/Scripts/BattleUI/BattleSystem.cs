@@ -78,16 +78,20 @@ public class BattleSystem : MonoBehaviour
         var skill = playerUnit.elf.skills[currentSkill];//确定选择的技能
 
         yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
+        playerUnit.PlayAttackAnimation();//玩家攻击动画
         yield return new WaitForSeconds(1f);
+
+        enemyUnit.PlayHitAnimation();//敌人受击动画
 
         var damageDetails= enemyUnit.elf.TakeDamage(skill, playerUnit.elf);
 
-        yield return enemyHud.UpdateHp();
+        yield return enemyHud.UpdateHp();//更新敌人hp
         yield return ShowDamageDetails(damageDetails);
 
         if (damageDetails.Fainted)
         {
-            yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}倒下了");
+            yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}倒下了！");
+            enemyUnit.PlayFaintAnimation();//敌人倒下动画
         }
         else
         {
@@ -113,15 +117,19 @@ public class BattleSystem : MonoBehaviour
         var skill = enemyUnit.elf.GetRandomSkill();
 
         yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
+        enemyUnit.PlayAttackAnimation();//敌人攻击动画
         yield return new WaitForSeconds(1f);
 
+        playerUnit.PlayHitAnimation();//玩家受击动画
+
         var damageDetails = playerUnit.elf.TakeDamage(skill, enemyUnit.elf);
-        yield return playerHud.UpdateHp();
+        yield return playerHud.UpdateHp();//更新玩家hp
         yield return ShowDamageDetails(damageDetails);
 
         if (damageDetails.Fainted)
         {
-            yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}倒下了");
+            yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}倒下了！");
+            playerUnit.PlayFaintAnimation();//玩家倒下动画
         }
         else
         {
