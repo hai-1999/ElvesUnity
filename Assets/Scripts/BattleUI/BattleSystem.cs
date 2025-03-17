@@ -17,12 +17,14 @@ public class BattleSystem : MonoBehaviour
 
     [SerializeField] BattleDialogBox dialogBox;
 
+    public event Action<bool> OnBattleOver;
+
     BattleState state;
 
     int currentAction;//当前动作
     int currentSkill;//当前技能
 
-    private void Start()
+    public void StartBattle()
     {
         dialogBox.EnableDialogText(true);//对话框文本可见
 
@@ -32,7 +34,7 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
 
-    private void Update()
+    public void HandleUpdate()
     {
         if (state == BattleState.PlayerActionSelection)
             HandleActionSelection();
@@ -78,10 +80,10 @@ public class BattleSystem : MonoBehaviour
         var skill = playerUnit.elf.skills[currentSkill];//确定选择的技能
 
         yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
-        playerUnit.PlayAttackAnimation();//玩家攻击动画
+        playerUnit.ElvesAttackAnimation();//玩家攻击动画
         yield return new WaitForSeconds(1f);
 
-        enemyUnit.PlayHitAnimation();//敌人受击动画
+        enemyUnit.ElvesHitAnimation();//敌人受击动画
 
         var damageDetails= enemyUnit.elf.TakeDamage(skill, playerUnit.elf);
 
@@ -91,7 +93,11 @@ public class BattleSystem : MonoBehaviour
         if (damageDetails.Fainted)
         {
             yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}倒下了！");
-            enemyUnit.PlayFaintAnimation();//敌人倒下动画
+            enemyUnit.ElvesFaintAnimation();//敌人倒下动画
+
+            yield return new WaitForSeconds(1f);
+            OnBattleOver(true);
+
         }
         else
         {
@@ -117,10 +123,10 @@ public class BattleSystem : MonoBehaviour
         var skill = enemyUnit.elf.GetRandomSkill();
 
         yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
-        enemyUnit.PlayAttackAnimation();//敌人攻击动画
+        enemyUnit.ElvesAttackAnimation();//敌人攻击动画
         yield return new WaitForSeconds(1f);
 
-        playerUnit.PlayHitAnimation();//玩家受击动画
+        playerUnit.ElvesHitAnimation();//玩家受击动画
 
         var damageDetails = playerUnit.elf.TakeDamage(skill, enemyUnit.elf);
         yield return playerHud.UpdateHp();//更新玩家hp
@@ -129,7 +135,10 @@ public class BattleSystem : MonoBehaviour
         if (damageDetails.Fainted)
         {
             yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}倒下了！");
-            playerUnit.PlayFaintAnimation();//玩家倒下动画
+            playerUnit.ElvesFaintAnimation();//玩家倒下动画
+
+            yield return new WaitForSeconds(2f);
+            OnBattleOver(true);
         }
         else
         {

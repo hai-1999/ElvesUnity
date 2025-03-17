@@ -1,9 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public LayerMask buildingLayer;
+    public LayerMask grassLayer;
+
+    public event Action OnEncountered;
+
     private float moveSpeed = 3;
     private bool isMoving;
 
@@ -11,15 +17,12 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
-    public LayerMask buildingLayer;
-    public LayerMask grassLayer;
-
     private void Awake()
     {
         animator = GetComponent<Animator>();//从当前游戏对象获取动画控制器组件
     }
-     
-    private void Update()//每帧调用一次
+
+    public void HandleUpdate()//每帧调用一次
     {
         if (!isMoving)
         {
@@ -38,9 +41,7 @@ public class PlayerController : MonoBehaviour
                 targetPos.y += input.y;//计算移动后的Y轴坐标
 
                 if (IsWalkable(targetPos))
-                {
                     StartCoroutine(Move(targetPos));//开启协程
-                }
             }
         }
         animator.SetBool("isMoving", isMoving);
@@ -77,9 +78,10 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics2D.OverlapCircle(transform.position, 0.2f, grassLayer) != null)
         {
-            if (Random.Range(1, 100) <= 20)//20%的草丛遇敌
+            if (UnityEngine.Random.Range(1, 100) <= 20)//20%的草丛遇敌
             {
-                Debug.Log("遇敌 ！！");
+                animator.SetBool("isMoving", false);
+                OnEncountered();
             }
         }
     }

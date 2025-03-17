@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class BattleUnit : MonoBehaviour
 {
@@ -32,11 +33,14 @@ public class BattleUnit : MonoBehaviour
         else
             image.sprite = elf.baseElf.RightSprite;
 
-        PlayEnterAnimation();
+        ElvesEnterAnimation();
     }
 
-    public void PlayEnterAnimation()
+    //精灵进入动画
+    public void ElvesEnterAnimation()
     {
+        image.color = orginalColor;
+
         if (isPlayerUnit)
             image.transform.localPosition = new Vector3(-500f, orginalPos.y);
         else
@@ -45,28 +49,31 @@ public class BattleUnit : MonoBehaviour
         image.transform.DOLocalMoveX(orginalPos.x, 1f);
     }
 
-    public void PlayAttackAnimation()
+    //精灵攻击动画
+    public void ElvesAttackAnimation()
     {
-        var sequence = DOTween.Sequence();
+        var sequence = DOTween.Sequence();//定义动画序列
         if (isPlayerUnit)
-            sequence.Append(image.transform.DOLocalMoveX(orginalPos.x + 50f, 0.25f));
+            sequence.Append(image.transform.DOLocalMoveX(orginalPos.x + 50f, 0.25f));//0.25s内右移50单位
         else
-            sequence.Append(image.transform.DOLocalMoveX(orginalPos.x + 50f, 0.25f));
+            sequence.Append(image.transform.DOLocalMoveX(orginalPos.x - 50f, 0.25f));//0.25s内左移50单位
 
-        sequence.Append(image.transform.DOLocalMoveX(orginalPos.x, 0.25f));
+        sequence.Append(image.transform.DOLocalMoveX(orginalPos.x, 0.25f));//0.25s内返回初始位置
     }
 
-    public void PlayHitAnimation()
+    //精灵受击动画
+    public void ElvesHitAnimation()
     {
         var sequence = DOTween.Sequence();
-        sequence.Append(image.DOColor(Color.gray, 0.1f));
-        sequence.Append(image.DOColor(orginalColor, 1f));
+        sequence.Append(image.DOColor(Color.gray, 0.1f));//0.1s内变灰
+        sequence.Append(image.DOColor(orginalColor, 1f));//1s内变回初始颜色
     }
 
-    public void PlayFaintAnimation()
+    //精灵退场动画
+    public void ElvesFaintAnimation()
     {
         var sequence = DOTween.Sequence();
-        sequence.Append(image.transform.DOLocalMoveY(orginalPos.y-150f, 0.25f));
-        sequence.Join(image.DOFade(0f, 0.5f));
+        sequence.Append(image.transform.DOLocalMoveY(orginalPos.y-150f, 0.25f));//0.25s内下移150单位
+        sequence.Join(image.DOFade(0f, 0.5f));//0.5f内消失
     }
 }
