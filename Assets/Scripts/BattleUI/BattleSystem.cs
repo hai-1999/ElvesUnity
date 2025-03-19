@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 //枚举 对战过程中的状态
@@ -9,12 +7,13 @@ public enum BattleState {Start, PlayerActionSelection, PlayerSkillSelection, Ene
 
 public class BattleSystem : MonoBehaviour
 {
+    [Header("敌人UI")]
     [SerializeField] BattleUnit enemyUnit;
     [SerializeField] BattleHud enemyHud;
-
+    [Header("玩家UI")]
     [SerializeField] BattleUnit playerUnit;
     [SerializeField] BattleHud playerHud;
-
+    [Header("对话框")]
     [SerializeField] BattleDialogBox dialogBox;
 
     public event Action<bool> OnBattleOver;
@@ -34,26 +33,26 @@ public class BattleSystem : MonoBehaviour
         StartCoroutine(SetupBattle());
     }
 
-    public void HandleUpdate()
-    {
-        if (state == BattleState.PlayerActionSelection)
-            HandleActionSelection();
-        else if (state == BattleState.PlayerSkillSelection)
-            HandleSkillSelection();
-    }
-
     public IEnumerator SetupBattle()//战斗系统初始化
     {
-        enemyUnit.SetUp();
+        enemyUnit.SetUp();//创建新的elf
         enemyHud.SetData(enemyUnit.elf);
 
         playerUnit.SetUp();
         playerHud.SetData(playerUnit.elf);
         dialogBox.SetSkillNames(playerUnit.elf.skills);
 
-        yield return dialogBox.TypeDialog($"一个野生的{playerUnit.elf.baseElf.ElfName}出现了！！");
+        yield return dialogBox.TypeDialog($"一个野生的{enemyUnit.elf.baseElf.ElfName}出现了！！");
 
         PlayerAction();//开始玩家选择动作
+    }
+
+    public void HandleUpdate()
+    {
+        if (state == BattleState.PlayerActionSelection)
+            HandleActionSelection();
+        else if (state == BattleState.PlayerSkillSelection)
+            HandleSkillSelection();
     }
 
     void PlayerAction()
@@ -78,6 +77,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.Busy;
         var skill = playerUnit.elf.skills[currentSkill];//确定选择的技能
+        skill.PP--;
 
         yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
         playerUnit.ElvesAttackAnimation();//玩家攻击动画
@@ -87,7 +87,7 @@ public class BattleSystem : MonoBehaviour
 
         var damageDetails= enemyUnit.elf.TakeDamage(skill, playerUnit.elf);
 
-        yield return enemyHud.UpdateHp();//更新敌人hp
+        yield return enemyHud.UpdateHpSmooth();//更新敌人hp
         yield return ShowDamageDetails(damageDetails);
 
         if (damageDetails.Fainted)
@@ -129,7 +129,7 @@ public class BattleSystem : MonoBehaviour
         playerUnit.ElvesHitAnimation();//玩家受击动画
 
         var damageDetails = playerUnit.elf.TakeDamage(skill, enemyUnit.elf);
-        yield return playerHud.UpdateHp();//更新玩家hp
+        yield return playerHud.UpdateHpSmooth();//更新玩家hp
         yield return ShowDamageDetails(damageDetails);
 
         if (damageDetails.Fainted)

@@ -1,33 +1,42 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Elves", menuName = "Elves/Creat new Elf")]
-public class BaseElf : ScriptableObject
+public class ElvesBase : ScriptableObject
 {
     //[SerializeField] 使私有变量在Inspector中可见并可编辑
-    [SerializeField] string id;
+    [SerializeField] int id;
     [SerializeField] string elfName;
 
-    [TextArea]
-    [SerializeField] string description;
+    //[TextArea]
+    //[SerializeField] string description;
 
+    [Header("贴图")]
     [SerializeField] Sprite leftSprite;
     [SerializeField] Sprite rightSprite;
 
-    //返回私有变量的值，方便后续调用
-    public string Id
+    [Header("属性")]
+    [SerializeField] Type type1;
+    [SerializeField] Type type2;
+
+    [Header("种族值")]
+    [Range(0, 100)] public int Hp;
+    [Range(0, 100)] public int Attack;
+    [Range(0, 100)] public int Defense;
+    [Range(0, 100)] public int SpAttack;
+    [Range(0, 100)] public int SpDefense;
+    [Range(0, 100)] public int Speed;
+
+    [Header("可学习技能")]
+    [SerializeField] List<LearnableSkill> learnableSkills;
+
+    public int Id
     {
         get { return id; }
     }
     public string ElfName
     {
         get { return elfName; }
-    }
-
-    public string Description
-    {
-        get { return description; }
     }
 
     public Sprite LeftSprite
@@ -39,54 +48,39 @@ public class BaseElf : ScriptableObject
         get { return rightSprite; }
     }
 
-
-    [SerializeField] ElvesType type1;
-    [SerializeField] ElvesType type2;
-
-    public ElvesType Type1
+    public Type Type1
     {
         get { return type1; }
     }
-    public ElvesType Type2
+    public Type Type2
     {
         get { return type2; }
     }
 
-    //种族值
-    [SerializeField] int baseStatsHp;
-    [SerializeField] int baseStatsAttack;
-    [SerializeField] int baseStatsDefense;
-    [SerializeField] int baseStatsSpAttack;
-    [SerializeField] int baseStatsSpDefense;
-    [SerializeField] int baseStatsSpeed;
-
     public int BaseStatsHp
     {
-        get { return baseStatsHp; }
+        get { return Hp; }
     }
     public int BaseStatsAttack
     {
-        get { return baseStatsAttack; }
+        get { return Attack; }
     }
     public int BaseStatsDefense
     {
-        get { return baseStatsDefense; }
+        get { return Defense; }
     }
     public int BaseStatsSpAttack
     {
-        get { return baseStatsSpAttack; }
+        get { return SpAttack; }
     }
     public int BaseStatsSpDefense
     {
-        get { return baseStatsSpDefense; }
+        get { return SpDefense; }
     }
     public int BaseStatsSpeed
     {
-        get { return baseStatsSpeed; }
+        get { return Speed; }
     }
-
-
-    [SerializeField] List<LearnableSkill> learnableSkills;
 
     public List<LearnableSkill> LearnableSkills
     {
@@ -99,10 +93,10 @@ public class BaseElf : ScriptableObject
 //创建可学习技能类，包括技能和等级
 public class LearnableSkill
 {
-    [SerializeField] BaseSkill skill;
+    [SerializeField] SkillBase skill;
     [SerializeField] int level;
 
-    public BaseSkill SkillBase
+    public SkillBase SkillBase
     {
         get { return skill; }
     }
@@ -112,6 +106,4 @@ public class LearnableSkill
         get { return level; }
     }
 }
-
-//枚举 ELves和Skills的属性
 

@@ -1,16 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-public enum ElvesType
+public enum Type
 {
     None,
     Õý³£,
     »ð,
     Ë®,
     ²Ý,
-
 }
 
 public class TypeChart
@@ -24,9 +18,9 @@ public class TypeChart
         /*GRA*/ new float[] {1f,   1f,   2f,  0.5f},
     };
 
-    public static float GetEffectiveness(ElvesType att,ElvesType def)
+    public static float GetEffectiveness(Type att,Type def)
     {
-        if (att == ElvesType.None || def == ElvesType.None)
+        if (att == Type.None || def == Type.None)
             return 1;
 
         int row = (int)att - 1;

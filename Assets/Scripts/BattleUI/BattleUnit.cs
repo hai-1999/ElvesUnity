@@ -1,17 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using Unity.VisualScripting;
 
 public class BattleUnit : MonoBehaviour
 {
-    [SerializeField] BaseElf baseElves;
+    [SerializeField] ElvesBase baseElves;
     [SerializeField] int level;
     [SerializeField] bool isPlayerUnit;
 
-    public Elf elf { get; set; }
+    public Elves elf { get; set; }
 
     Image image;
     Vector3 orginalPos;
@@ -24,10 +21,9 @@ public class BattleUnit : MonoBehaviour
         orginalColor = image.color;
     }
 
-
     public void SetUp()
     {
-        elf = new Elf(baseElves, level);//通过baseElves和level创建新的Elves
+        elf = new Elves(baseElves, level);//创建新的elf
         if (isPlayerUnit)
             image.sprite = elf.baseElf.LeftSprite;
         else

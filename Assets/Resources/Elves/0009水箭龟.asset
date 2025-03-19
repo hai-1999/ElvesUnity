@@ -9,24 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77c16795a4a547c4daab57284e01b31e, type: 3}
+  m_Script: {fileID: 11500000, guid: f8b29e3cf495e134c98e4c7a1ebcb118, type: 3}
   m_Name: "0009\u6C34\u7BAD\u9F9F"
   m_EditorClassIdentifier: 
-  id: 0009
+  id: 0
   elfName: "\u6C34\u7BAD\u9F9F"
-  description: 
   leftSprite: {fileID: 21300000, guid: 59fa512fa0ff3164f9c047825a422986, type: 3}
   rightSprite: {fileID: 21300000, guid: 1a2cb2fdba8754347ad8769ed552239c, type: 3}
   type1: 3
   type2: 0
-  baseStatsHp: 25
-  baseStatsAttack: 25
-  baseStatsDefense: 25
-  baseStatsSpAttack: 25
-  baseStatsSpDefense: 25
-  baseStatsSpeed: 25
+  Hp: 25
+  Attack: 25
+  Defense: 25
+  SpAttack: 25
+  SpDefense: 25
+  Speed: 25
   learnableSkills:
   - skill: {fileID: 11400000, guid: 48b154d01d2adbd41acabe8234445b67, type: 2}
     level: 1
   - skill: {fileID: 11400000, guid: 4de51cd3c7d2aa84baf8ee356766e45f, type: 2}
-    level: 8
+    level: 6

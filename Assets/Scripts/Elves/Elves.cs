@@ -1,40 +1,34 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
-public class Elf
+public class Elves
 {
-    public BaseElf baseElf { get; set; }
+    public ElvesBase baseElf { get; set; }
     public int level { get; set; }
 
     public int hp { get; set; }
 
     public List<Skill> skills { get; set; }
 
-    public Elf(BaseElf pbaseElf, int pLevel)//Elf初始化
+    public Elves(ElvesBase pbaseElf, int pLevel)
     {
-        baseElf = pbaseElf;//初始化基础参数
-        level = pLevel;//初始化等级
+        baseElf = pbaseElf;//导入基础数值
+        level = pLevel;//设置等级
         hp = MaxHp;//初始血量等于最大血量
 
+        //初始化技能
         skills = new List<Skill>();
 
-        foreach (var skill in baseElf.LearnableSkills)//初始化技能
+        foreach (var skill in baseElf.LearnableSkills)
         {
             if (skill.Level <= level)
-            {
                 skills.Add(new Skill(skill.SkillBase));
-            }
+
             if (skills.Count >= 4)//最多四个技能 
-            {
                 break;
-            }
         }       
     }
-    //
+    
     public int MaxHp
     {
         get { return Mathf.FloorToInt((baseElf.BaseStatsHp * level) / 100f) + 10; }
@@ -45,7 +39,7 @@ public class Elf
         get { return Mathf.FloorToInt((baseElf.BaseStatsAttack * level) / 100f) + 5; }
     }
 
-    public int Denfense
+    public int Defense
     {
         get { return Mathf.FloorToInt((baseElf.BaseStatsDefense * level) / 100f) + 5; }
     }
@@ -65,21 +59,34 @@ public class Elf
         get { return Mathf.FloorToInt((baseElf.BaseStatsSpeed * level) / 100f) + 5; }
     }
 
-    public DamageDetails TakeDamage(Skill skill, Elf attacker)//伤害计算，返回是否倒下
+    //伤害计算函数，返回伤害详情
+    public DamageDetails TakeDamage(Skill skill, Elves attacker)
     {
+        //基础伤害
+        float baseDamage;
+        if (skill.Base.DamageType == DamageType.物理)
+            baseDamage = skill.Base.Power * ((float)attacker.Attack / Defense) + 2;
+        else if (skill.Base.DamageType == DamageType.特殊)
+            baseDamage = skill.Base.Power * ((float)attacker.SpAttack / SpDefense) + 2;
+        else
+            baseDamage = 0;
 
-        float baseDamage = skill.Base.Power * ((float)attacker.Attack / Denfense) + 2;//基础伤害
+        //等级加成
+        float level = (2 * attacker.level + 10) / 250f;
 
-        float level = (2 * attacker.level + 10) / 250f;//等级加成
+        //属性克制
         float type = TypeChart.GetEffectiveness(skill.Base.Type, this.baseElf.Type1)
-                   * TypeChart.GetEffectiveness(skill.Base.Type, this.baseElf.Type2);//属性克制
+                   * TypeChart.GetEffectiveness(skill.Base.Type, this.baseElf.Type2);
 
+        //是否暴击
         float critical = 1f;
-        if (Random.value * 100f <= 6.25f)//是否暴击
+        if (Random.value * 100f <= 6.25f)
             critical = 2f;
 
-        float modifiers = Random.Range(0.85f, 1f);//数值修正
+        //数值修正
+        float modifiers = Random.Range(0.85f, 1f);
 
+        //最终伤害
         float finalDamage = baseDamage * level * type * critical * modifiers;
         hp -= Mathf.FloorToInt(finalDamage);
 
@@ -90,7 +97,6 @@ public class Elf
             Fainted=false
         };
 
-
         if (hp<=0)//hp最小为0
         {
             hp = 0;
@@ -99,14 +105,12 @@ public class Elf
         return damageDetails;
     }
 
-
     public Skill GetRandomSkill()
     {
         int r = Random.Range(0, skills.Count);
         return skills[r];      
     }
 }
-
 
 
 public class DamageDetails

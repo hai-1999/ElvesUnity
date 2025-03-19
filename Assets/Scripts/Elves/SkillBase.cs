@@ -1,16 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Skill", menuName = "Elves/Creat new Skill")]
 
-public class BaseSkill : ScriptableObject
+public class SkillBase : ScriptableObject
 {
     [SerializeField] string id;
     [SerializeField] string skillName;
 
-    [TextArea]
-    [SerializeField] string description;
+    [Header("属性")]
+    [SerializeField] Type type;
+    [SerializeField] DamageType damageType;
+
+    [Header("技能数值")]
+    [SerializeField] int power;
+    [SerializeField] int accuracy;
+    [SerializeField] int pp;
 
     public string Id
     {
@@ -21,19 +25,14 @@ public class BaseSkill : ScriptableObject
         get { return skillName; }
     }
 
-    public string Description
-    {
-        get { return description; }
-    }
-
-    [SerializeField] ElvesType type;
-    [SerializeField] int power;
-    [SerializeField] int accuracy;
-    [SerializeField] int pp;
-
-    public ElvesType Type
+    public Type Type
     {
         get { return type; }
+    }
+
+    public DamageType DamageType
+    {
+        get { return damageType; }
     }
 
     public int Power
@@ -51,4 +50,11 @@ public class BaseSkill : ScriptableObject
         get { return pp; }
     }
 
+}
+
+public enum DamageType
+{
+    物理,
+    特殊,
+    变化
 }
