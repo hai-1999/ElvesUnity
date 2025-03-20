@@ -23,8 +23,14 @@ public class BattleSystem : MonoBehaviour
     int currentAction;//当前动作
     int currentSkill;//当前技能
 
-    public void StartBattle()
+    ElvesParty elvesParty;
+    Elves wildElves;
+
+    public void StartBattle(ElvesParty elvesParty, Elves elves)
     {
+        this.elvesParty = elvesParty;
+        this.wildElves = elves;
+
         dialogBox.EnableDialogText(true);//对话框文本可见
 
         dialogBox.EnableActionSelector(false);//动作选择器不可见
@@ -35,14 +41,15 @@ public class BattleSystem : MonoBehaviour
 
     public IEnumerator SetupBattle()//战斗系统初始化
     {
-        enemyUnit.SetUp();//创建新的elf
+        enemyUnit.SetUp(wildElves);//生成野生elf
         enemyHud.SetData(enemyUnit.elf);
 
-        playerUnit.SetUp();
+        playerUnit.SetUp(elvesParty.GeteHealthyElves());//从同行elves中选择一个健康的elf
         playerHud.SetData(playerUnit.elf);
-        dialogBox.SetSkillNames(playerUnit.elf.skills);
 
-        yield return dialogBox.TypeDialog($"一个野生的{enemyUnit.elf.baseElf.ElfName}出现了！！");
+        dialogBox.SetSkillNames(playerUnit.elf.Skills);
+
+        yield return dialogBox.TypeDialog($"一个野生的{enemyUnit.elf.BaseElf.ElfName}出现了！！");
 
         PlayerAction();//开始玩家选择动作
     }
@@ -59,7 +66,7 @@ public class BattleSystem : MonoBehaviour
     {
         state = BattleState.PlayerActionSelection;//战斗状态设置为“玩家动作选择”
 
-        StartCoroutine(dialogBox.TypeDialog($"选择一个动作！！"));
+        dialogBox.SetDialog($"选择一个动作！！");
         dialogBox.EnableActionSelector(true);//动作选择器开启
     }
 
@@ -76,10 +83,10 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PerformPlayerSKill()
     {
         state = BattleState.Busy;
-        var skill = playerUnit.elf.skills[currentSkill];//确定选择的技能
+        var skill = playerUnit.elf.Skills[currentSkill];//确定选择的技能
         skill.PP--;
 
-        yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
+        yield return dialogBox.TypeDialog($"{playerUnit.elf.BaseElf.ElfName}使用了{skill.Base.SkillName}！");
         playerUnit.ElvesAttackAnimation();//玩家攻击动画
         yield return new WaitForSeconds(1f);
 
@@ -92,12 +99,11 @@ public class BattleSystem : MonoBehaviour
 
         if (damageDetails.Fainted)
         {
-            yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}倒下了！");
+            yield return dialogBox.TypeDialog($"{enemyUnit.elf.BaseElf.ElfName}倒下了！");
             enemyUnit.ElvesFaintAnimation();//敌人倒下动画
 
             yield return new WaitForSeconds(1f);
             OnBattleOver(true);
-
         }
         else
         {
@@ -122,7 +128,7 @@ public class BattleSystem : MonoBehaviour
 
         var skill = enemyUnit.elf.GetRandomSkill();
 
-        yield return dialogBox.TypeDialog($"{enemyUnit.elf.baseElf.ElfName}使用了{skill.Base.SkillName}！");
+        yield return dialogBox.TypeDialog($"{enemyUnit.elf.BaseElf.ElfName}使用了{skill.Base.SkillName}！");
         enemyUnit.ElvesAttackAnimation();//敌人攻击动画
         yield return new WaitForSeconds(1f);
 
@@ -134,7 +140,7 @@ public class BattleSystem : MonoBehaviour
 
         if (damageDetails.Fainted)
         {
-            yield return dialogBox.TypeDialog($"{playerUnit.elf.baseElf.ElfName}倒下了！");
+            yield return dialogBox.TypeDialog($"{playerUnit.elf.BaseElf.ElfName}倒下了！");
             playerUnit.ElvesFaintAnimation();//玩家倒下动画
 
             yield return new WaitForSeconds(2f);
@@ -192,7 +198,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (currentSkill < playerUnit.elf.skills.Count-1)
+            if (currentSkill < playerUnit.elf.Skills.Count-1)
                 ++currentSkill;
         }
         else if (Input.GetKeyDown(KeyCode.A))
@@ -202,7 +208,7 @@ public class BattleSystem : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            if (currentSkill < playerUnit.elf.skills.Count - 2)
+            if (currentSkill < playerUnit.elf.Skills.Count - 2)
                 currentSkill += 2;
         }
         else if (Input.GetKeyDown(KeyCode.W))
@@ -210,7 +216,7 @@ public class BattleSystem : MonoBehaviour
             if (currentSkill > 1)
                 currentSkill -=2;
         }
-        dialogBox.UpdateSKillSelection(currentSkill, playerUnit.elf.skills[currentSkill]);
+        dialogBox.UpdateSKillSelection(currentSkill, playerUnit.elf.Skills[currentSkill]);
 
         if (Input.GetKeyDown(KeyCode.Space))//按“空格”确定
         {
@@ -218,6 +224,12 @@ public class BattleSystem : MonoBehaviour
             dialogBox.EnableDialogText(true);
 
             StartCoroutine(PerformPlayerSKill());//执行玩家选择技能
+        }
+        else if(Input.GetKeyDown(KeyCode.Escape))//按“退格”返回
+        {
+            dialogBox.EnableSkillSelector(true);
+            dialogBox.EnableDialogText(false);
+            PlayerAction();
         }
     }
 }

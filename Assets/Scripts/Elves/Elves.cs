@@ -1,30 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+
 public class Elves
 {
-    public ElvesBase baseElf { get; set; }
-    public int level { get; set; }
+    [SerializeField] ElvesBase baseElf;
+    [SerializeField] int level;
 
-    public int hp { get; set; }
+    public ElvesBase BaseElf {
+        get { 
+            return baseElf; 
+        }
+    }
+    public int Level {
+         get { 
+            return level; 
+         }
+    }
 
-    public List<Skill> skills { get; set; }
+    public int HP { get; set; }
 
-    public Elves(ElvesBase pbaseElf, int pLevel)
+    public List<Skill> Skills { get; set; }
+
+    public void Init()
     {
-        baseElf = pbaseElf;//导入基础数值
-        level = pLevel;//设置等级
-        hp = MaxHp;//初始血量等于最大血量
+        this.HP = MaxHp;
 
         //初始化技能
-        skills = new List<Skill>();
+        this.Skills = new List<Skill>();
 
         foreach (var skill in baseElf.LearnableSkills)
         {
             if (skill.Level <= level)
-                skills.Add(new Skill(skill.SkillBase));
+                Skills.Add(new Skill(skill.SkillBase));
 
-            if (skills.Count >= 4)//最多四个技能 
+            if (Skills.Count >= 4)//最多四个技能 
                 break;
         }       
     }
@@ -88,7 +99,7 @@ public class Elves
 
         //最终伤害
         float finalDamage = baseDamage * level * type * critical * modifiers;
-        hp -= Mathf.FloorToInt(finalDamage);
+        HP -= Mathf.FloorToInt(finalDamage);
 
         var damageDetails = new DamageDetails()
         {
@@ -97,9 +108,9 @@ public class Elves
             Fainted=false
         };
 
-        if (hp<=0)//hp最小为0
+        if (HP<=0)//hp最小为0
         {
-            hp = 0;
+            HP = 0;
             damageDetails.Fainted = true;
         }
         return damageDetails;
@@ -107,8 +118,8 @@ public class Elves
 
     public Skill GetRandomSkill()
     {
-        int r = Random.Range(0, skills.Count);
-        return skills[r];      
+        int r = Random.Range(0, Skills.Count);
+        return Skills[r];      
     }
 }
 

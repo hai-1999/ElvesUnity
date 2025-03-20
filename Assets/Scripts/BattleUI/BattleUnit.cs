@@ -4,8 +4,8 @@ using DG.Tweening;
 
 public class BattleUnit : MonoBehaviour
 {
-    [SerializeField] ElvesBase baseElves;
-    [SerializeField] int level;
+    //[SerializeField] ElvesBase baseElves;
+    //[SerializeField] int level;
     [SerializeField] bool isPlayerUnit;
 
     public Elves elf { get; set; }
@@ -17,17 +17,17 @@ public class BattleUnit : MonoBehaviour
     private void Awake()
     {
         image = GetComponent<Image>();
-        orginalPos = image.transform.localPosition;
+        orginalPos = transform.localPosition;
         orginalColor = image.color;
     }
 
-    public void SetUp()
+    public void SetUp(Elves elf)
     {
-        elf = new Elves(baseElves, level);//创建新的elf
+        this.elf = elf;//创建新的elf
         if (isPlayerUnit)
-            image.sprite = elf.baseElf.LeftSprite;
+            image.sprite = this.elf.BaseElf.LeftSprite;
         else
-            image.sprite = elf.baseElf.RightSprite;
+            image.sprite = this.elf.BaseElf.RightSprite;
 
         ElvesEnterAnimation();
     }

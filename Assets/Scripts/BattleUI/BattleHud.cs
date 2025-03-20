@@ -14,15 +14,15 @@ public class BattleHud : MonoBehaviour
     {
         this.elf = elf;
 
-        nameText.text = elf.baseElf.ElfName;
-        levelText.text = "Lvl " + elf.level;
+        nameText.text = elf.BaseElf.ElfName;
+        levelText.text = "Lvl " + elf.Level;
 
-        health.transform.localScale = new Vector3((float)elf.hp / elf.MaxHp, 1f, 1f);
+        health.transform.localScale = new Vector3((float)elf.HP / elf.MaxHp, 1f, 1f);
     }
 
     public IEnumerator UpdateHpSmooth()
     {
-        float newHp = (float)elf.hp / elf.MaxHp;
+        float newHp = (float)elf.HP / elf.MaxHp;
         float curHp = health.transform.localScale.x;//当前HP
         float changeAmt = curHp - newHp;// HP变化量
 

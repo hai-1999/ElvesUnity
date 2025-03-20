@@ -22,7 +22,10 @@ public class GameController : MonoBehaviour
         battleSystem.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
 
-        battleSystem.StartBattle();//战斗系统初始化
+        var playerParty = playerController.GetComponent<ElvesParty>();
+        var wildElves = FindObjectOfType<ElvesMap>().GetComponent<ElvesMap>().GetRandomWildElves();
+
+        battleSystem.StartBattle(playerParty, wildElves);//战斗系统初始化
     }
 
     void EndBattle(bool won)

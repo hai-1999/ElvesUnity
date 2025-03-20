@@ -579,8 +579,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995a269ae61895b4791c548c08da580a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseElves: {fileID: 11400000, guid: 40daa6cfd97b59c4eb74e2bf06596fa2, type: 2}
-  level: 7
   isPlayerUnit: 0
 --- !u!114 &174193867
 MonoBehaviour:
@@ -1687,203 +1685,7 @@ CompositeCollider2D:
   m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 634260352}
-    m_ColliderPaths:
-    - - X: 80000000
-        Y: 38750000
-      - X: 79375000
-        Y: 40000000
-      - X: 70000000
-        Y: 40000000
-      - X: 70000000
-        Y: 38750000
-      - X: 69375000
-        Y: 40000000
-      - X: 60000000
-        Y: 40000000
-      - X: 60000000
-        Y: 38750000
-      - X: 59375000
-        Y: 40000000
-      - X: 50000000
-        Y: 40000000
-      - X: 50000000
-        Y: 38750000
-      - X: 49375000
-        Y: 40000000
-      - X: 40000000
-        Y: 40000000
-      - X: 40000000
-        Y: 38750000
-      - X: 39375000
-        Y: 40000000
-      - X: 30000000
-        Y: 40000000
-      - X: 30000000
-        Y: 38750000
-      - X: 29375000
-        Y: 40000000
-      - X: 20000000
-        Y: 40000000
-      - X: 20000000
-        Y: 38750000
-      - X: 19375000
-        Y: 40000000
-      - X: 10000000
-        Y: 40000000
-      - X: 10000000
-        Y: 38750000
-      - X: 9375000
-        Y: 40000000
-      - X: 0
-        Y: 40000000
-      - X: 0
-        Y: 38750000
-      - X: -625000
-        Y: 40000000
-      - X: -10000000
-        Y: 40000000
-      - X: -10000000
-        Y: 38750000
-      - X: -10625000
-        Y: 40000000
-      - X: -20000000
-        Y: 40000000
-      - X: -20000000
-        Y: 38750000
-      - X: -20625000
-        Y: 40000000
-      - X: -30000000
-        Y: 40000000
-      - X: -30000000
-        Y: 38750000
-      - X: -30625000
-        Y: 40000000
-      - X: -40000000
-        Y: 40000000
-      - X: -40000000
-        Y: 38750000
-      - X: -40625000
-        Y: 40000000
-      - X: -50000000
-        Y: 40000000
-      - X: -50000000
-        Y: 38750000
-      - X: -50625000
-        Y: 40000000
-      - X: -60000000
-        Y: 40000000
-      - X: -60000000
-        Y: 38750000
-      - X: -60625000
-        Y: 40000000
-      - X: -70000000
-        Y: 40000000
-      - X: -70000000
-        Y: 38750000
-      - X: -70625000
-        Y: 40000000
-      - X: -80000000
-        Y: 40000000
-      - X: -80000000
-        Y: -40000000
-      - X: 80000000
-        Y: -40000000
-    - - X: 69375000
-        Y: -30000000
-      - X: 60000000
-        Y: -30000000
-      - X: 60000000
-        Y: -31250000
-      - X: 59375000
-        Y: -30000000
-      - X: 50000000
-        Y: -30000000
-      - X: 50000000
-        Y: -31250000
-      - X: 49375000
-        Y: -30000000
-      - X: 40000000
-        Y: -30000000
-      - X: 40000000
-        Y: -31250000
-      - X: 39375000
-        Y: -30000000
-      - X: 30000000
-        Y: -30000000
-      - X: 30000000
-        Y: -31250000
-      - X: 29375000
-        Y: -30000000
-      - X: 20000000
-        Y: -30000000
-      - X: 20000000
-        Y: -31250000
-      - X: 19375000
-        Y: -30000000
-      - X: 10000000
-        Y: -30000000
-      - X: 10000000
-        Y: -31250000
-      - X: 9375000
-        Y: -30000000
-      - X: 0
-        Y: -30000000
-      - X: 0
-        Y: -31250000
-      - X: -625000
-        Y: -30000000
-      - X: -10000000
-        Y: -30000000
-      - X: -10000000
-        Y: -31250000
-      - X: -10625000
-        Y: -30000000
-      - X: -20000000
-        Y: -30000000
-      - X: -20000000
-        Y: -31250000
-      - X: -20625000
-        Y: -30000000
-      - X: -30000000
-        Y: -30000000
-      - X: -30000000
-        Y: -31250000
-      - X: -30625000
-        Y: -30000000
-      - X: -40000000
-        Y: -30000000
-      - X: -40000000
-        Y: -31250000
-      - X: -40625000
-        Y: -30000000
-      - X: -50000000
-        Y: -30000000
-      - X: -50000000
-        Y: -31250000
-      - X: -50625000
-        Y: -30000000
-      - X: -60000000
-        Y: -30000000
-      - X: -60000000
-        Y: -31250000
-      - X: -60625000
-        Y: -30000000
-      - X: -75000000
-        Y: -30000000
-      - X: -75000000
-        Y: 30000000
-      - X: 75000000
-        Y: 30000000
-      - X: 75000000
-        Y: -30000000
-      - X: 71875000
-        Y: -30000000
-      - X: 70000000
-        Y: -30625000
-      - X: 70000000
-        Y: -31250000
+  m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: 7.9999704, y: -4}
@@ -2066,7 +1868,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &657869831
 Grid:
   m_ObjectHideFlags: 0
@@ -4922,13 +4724,14 @@ GameObject:
   - component: {fileID: 1132525681}
   - component: {fileID: 1132525683}
   - component: {fileID: 1132525684}
+  - component: {fileID: 1132525685}
   m_Layer: 0
   m_Name: MainCharactor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1132525681
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5035,6 +4838,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1132525685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132525680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffce5eb7f41c4b345b068d2c1b83789c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elves:
+  - baseElf: {fileID: 11400000, guid: 40daa6cfd97b59c4eb74e2bf06596fa2, type: 2}
+    level: 20
+  - baseElf: {fileID: 11400000, guid: ef8923dbc82d0814db4bce6b00f0a7cf, type: 2}
+    level: 3
 --- !u!1 &1177247997
 GameObject:
   m_ObjectHideFlags: 0
@@ -5734,8 +5554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995a269ae61895b4791c548c08da580a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseElves: {fileID: 11400000, guid: ef8923dbc82d0814db4bce6b00f0a7cf, type: 2}
-  level: 10
   isPlayerUnit: 1
 --- !u!1 &1867511555
 GameObject:
@@ -6001,6 +5819,7 @@ GameObject:
   - component: {fileID: 2038169038}
   - component: {fileID: 2038169037}
   - component: {fileID: 2038169036}
+  - component: {fileID: 2038169039}
   m_Layer: 10
   m_Name: Grass
   m_TagString: Untagged
@@ -6230,49 +6049,7 @@ CompositeCollider2D:
   m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 2038169037}
-    m_ColliderPaths:
-    - - X: 40000000
-        Y: -9375000
-      - X: 40625000
-        Y: -10000000
-      - X: 50000000
-        Y: -10000000
-      - X: 50000000
-        Y: -9375000
-      - X: 50625000
-        Y: -10000000
-      - X: 60000000
-        Y: -10000000
-      - X: 60000000
-        Y: 10000000
-      - X: 30000000
-        Y: 10000000
-      - X: 30000000
-        Y: 625000
-      - X: 30625000
-        Y: 0
-      - X: 30000000
-        Y: 0
-      - X: 30000000
-        Y: -9375000
-      - X: 30625000
-        Y: -10000000
-      - X: 40000000
-        Y: -10000000
-    - - X: 50000000
-        Y: 0
-      - X: 50000000
-        Y: 625000
-      - X: 50625000
-        Y: 0
-    - - X: 40000000
-        Y: 0
-      - X: 40000000
-        Y: 625000
-      - X: 40625000
-        Y: 0
+  m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: 3.999971, y: -1}
@@ -6362,6 +6139,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2038169039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038169032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 698d878e5f5b59442ae3644d1bfbda5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WildElves:
+  - baseElf: {fileID: 11400000, guid: 40daa6cfd97b59c4eb74e2bf06596fa2, type: 2}
+    level: 12
 --- !u!1 &2050132330
 GameObject:
   m_ObjectHideFlags: 0
