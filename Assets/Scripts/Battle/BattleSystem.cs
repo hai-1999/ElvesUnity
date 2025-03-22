@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 //枚举 对战过程中的状态
-public enum BattleState {Start, PlayerActionSelection, PlayerSkillSelection, EnemySkillSelection, Busy}
+public enum BattleState {Start, ActionSelection, SkillSelection, EnemySkill, PartySelection, Busy}
 
 public class BattleSystem : MonoBehaviour
 {
@@ -15,6 +15,8 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud playerHud;
     [Header("对话框")]
     [SerializeField] BattleDialogBox dialogBox;
+    [Header("同行背包")]
+    [SerializeField] PartyBag PartyBag;
 
     public event Action<bool> OnBattleOver;
 
@@ -22,6 +24,7 @@ public class BattleSystem : MonoBehaviour
 
     int currentAction;//当前动作
     int currentSkill;//当前技能
+    int currentMember;//当前成员
 
     ElvesParty elvesParty;
     Elves wildElves;
@@ -35,6 +38,7 @@ public class BattleSystem : MonoBehaviour
 
         dialogBox.EnableActionSelector(false);//动作选择器不可见
         dialogBox.EnableSkillSelector(false);//技能选择器不可见
+        PartyBag.gameObject.SetActive(false);
 
         StartCoroutine(SetupBattle());
     }
@@ -43,6 +47,8 @@ public class BattleSystem : MonoBehaviour
     {
         enemyUnit.SetUp(wildElves);//生成野生elf
         enemyHud.SetData(enemyUnit.elf);
+
+        PartyBag.Init();
 
         playerUnit.SetUp(elvesParty.GeteHealthyElves());//从同行elves中选择一个健康的elf
         playerHud.SetData(playerUnit.elf);
@@ -56,15 +62,17 @@ public class BattleSystem : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if (state == BattleState.PlayerActionSelection)
+        if (state == BattleState.ActionSelection)
             HandleActionSelection();
-        else if (state == BattleState.PlayerSkillSelection)
+        else if (state == BattleState.SkillSelection)
             HandleSkillSelection();
+        else if (state == BattleState.PartySelection)
+            HandlePartySelection();
     }
 
     void PlayerAction()
     {
-        state = BattleState.PlayerActionSelection;//战斗状态设置为“玩家动作选择”
+        state = BattleState.ActionSelection;//战斗状态设置为“玩家动作选择”
 
         dialogBox.SetDialog($"选择一个动作！！");
         dialogBox.EnableActionSelector(true);//动作选择器开启
@@ -72,7 +80,7 @@ public class BattleSystem : MonoBehaviour
 
     void PlayerSkill()
     {
-        state = BattleState.PlayerSkillSelection;//战斗状态设置为“玩家技能选择”
+        state = BattleState.SkillSelection;//战斗状态设置为“玩家技能选择”
 
         dialogBox.EnableDialogText(false);//对话框文本不可见
         dialogBox.EnableActionSelector(false);//动作选择器不可见
@@ -80,7 +88,15 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableSkillSelector(true);//技能选择器开启
     }
 
-    IEnumerator PerformPlayerSKill()
+    void OpenPartyBag()
+    {
+        state = BattleState.PartySelection; //战斗状态设置为“同行elf选择”   
+        PartyBag.SetPartyData(elvesParty.Elves);
+        PartyBag.gameObject.SetActive(true);
+        // PartyBag.OnSelected += OnSelectedMember;
+    }
+
+    IEnumerator PerformPlayerSkill()
     {
         state = BattleState.Busy;
         var skill = playerUnit.elf.Skills[currentSkill];//确定选择的技能
@@ -124,7 +140,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EnemySkill()
     {
-        state = BattleState.EnemySkillSelection;//战斗状态设置为“敌人技能选择”
+        state = BattleState.EnemySkill;//战斗状态设置为“敌人技能选择”
 
         var skill = enemyUnit.elf.GetRandomSkill();
 
@@ -152,32 +168,23 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    void HandleActionSelection()//处理动作选择
+    //处理动作选择
+    void HandleActionSelection()
     {
         if(Input.GetKeyDown(KeyCode.D))
-        {
-            if(currentAction < 3)
-                ++currentAction;           
-        }
+            ++currentAction;           
         else if(Input.GetKeyDown(KeyCode.A))
-        {
-            if(currentAction > 0)
-                --currentAction;
-        }
+            --currentAction;
         else if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (currentAction < 2)
-                currentAction += 2;
-        }
+            currentAction += 2;
         else if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (currentAction > 1)
-                currentAction -= 2;
-        }
+            currentAction -= 2;
+
+        currentAction = Mathf.Clamp(currentAction, 0, 3);//限制当前动作在0到3之间
 
         dialogBox.UpdateActionSelection(currentAction);
 
-        if (Input.GetKeyDown(KeyCode.Space))//按“空格”确定
+        if (Input.GetKeyDown(KeyCode.Space))//按“J”确定
         {
             switch (currentAction)
             {
@@ -187,6 +194,7 @@ public class BattleSystem : MonoBehaviour
                 case 1:
                     break;
                 case 2:
+                    OpenPartyBag();
                     break;
                 case 3://逃跑
                     break;
@@ -194,42 +202,90 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-    void HandleSkillSelection()//处理技能选择
+    //处理技能选择
+    void HandleSkillSelection()
     {
         if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (currentSkill < playerUnit.elf.Skills.Count-1)
-                ++currentSkill;
-        }
+            ++currentSkill;
         else if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (currentSkill > 0)
-                --currentSkill;
-        }
+            --currentSkill;
         else if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (currentSkill < playerUnit.elf.Skills.Count - 2)
-                currentSkill += 2;
-        }
+            currentSkill += 2;
         else if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (currentSkill > 1)
-                currentSkill -=2;
-        }
+            currentSkill -=2;
+
+        currentAction = Mathf.Clamp(currentAction, 0, playerUnit.elf.Skills.Count - 1);//限制当前技能在0到技能数量之间
+
         dialogBox.UpdateSKillSelection(currentSkill, playerUnit.elf.Skills[currentSkill]);
 
-        if (Input.GetKeyDown(KeyCode.Space))//按“空格”确定
+        if (Input.GetKeyDown(KeyCode.Space))//按“J”确定
         {
             dialogBox.EnableSkillSelector(false);
             dialogBox.EnableDialogText(true);
 
-            StartCoroutine(PerformPlayerSKill());//执行玩家选择技能
+            StartCoroutine(PerformPlayerSkill());//执行玩家选择技能
         }
-        else if(Input.GetKeyDown(KeyCode.Escape))//按“退格”返回
+        else if(Input.GetKeyDown(KeyCode.X))//按“K”返回
         {
-            dialogBox.EnableSkillSelector(true);
-            dialogBox.EnableDialogText(false);
+            dialogBox.EnableSkillSelector(false);
+            dialogBox.EnableDialogText(true);
+
             PlayerAction();
         }
+    }
+
+    //处理elf选择
+    void HandlePartySelection()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+            ++currentMember;
+        else if (Input.GetKeyDown(KeyCode.A))
+            --currentMember;
+        else if (Input.GetKeyDown(KeyCode.S))
+            currentMember += 2;
+        else if (Input.GetKeyDown(KeyCode.W))
+            currentMember -= 2;
+
+        currentMember = Mathf.Clamp(currentMember, 0, elvesParty.Elves.Count - 1);//限制当前成员在0到elves数量之间
+
+        PartyBag.UpdateMemberSelection(currentMember);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var newMember = elvesParty.Elves[currentMember];
+            if (newMember.HP <= 0)
+            {
+                PartyBag.SetMessageText("无法选择已经倒下的精灵！");
+                return;
+            }
+            else if (newMember == playerUnit.elf)
+            {
+                PartyBag.SetMessageText("当前精灵已经在场上！");
+                return;
+            }
+
+            PartyBag.gameObject.SetActive(false);
+            state = BattleState.Busy;
+            StartCoroutine(SwitchElf(newMember));
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            PartyBag.gameObject.SetActive(false);
+            PlayerAction();
+        }
+    }
+    IEnumerator SwitchElf(Elves newElf)
+    {
+        yield return dialogBox.TypeDialog($"{playerUnit.elf.BaseElf.ElfName}回来！");
+        playerUnit.ElvesFaintAnimation();
+        yield return new WaitForSeconds(2f);
+
+        playerUnit.SetUp(newElf);//从同行elves中选择一个健康的elf
+        playerHud.SetData(newElf);
+
+        dialogBox.SetSkillNames(newElf.Skills);
+        yield return dialogBox.TypeDialog($"{playerUnit.elf.BaseElf.ElfName}出来吧！");
+
+        StartCoroutine(EnemySkill());//开始敌人选择动作
     }
 }

@@ -8,6 +8,11 @@ public class ElvesParty : MonoBehaviour
 {
     [SerializeField] List<Elves> elves;
 
+    public List<Elves> Elves
+    {
+        get { return elves;}
+    }
+
     private void Start()
     {
         foreach (var elf in elves)
