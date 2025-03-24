@@ -5,8 +5,18 @@ using DG.Tweening;
 public class BattleUnit : MonoBehaviour
 {
     //[SerializeField] ElvesBase baseElves;
-    //[SerializeField] int level;
+    [SerializeField] BattleHud hud;
     [SerializeField] bool isPlayerUnit;
+
+    public BattleHud Hud
+    {
+        get { return hud; }
+    }
+
+    public bool IsPlayerUnit
+    {
+        get { return isPlayerUnit; }
+    }
 
     public Elves elf { get; set; }
 
@@ -28,6 +38,8 @@ public class BattleUnit : MonoBehaviour
             image.sprite = this.elf.BaseElf.LeftSprite;
         else
             image.sprite = this.elf.BaseElf.RightSprite;
+
+        hud.SetData(elf);//…Ë÷√hud ˝æ›
 
         ElvesEnterAnimation();
     }

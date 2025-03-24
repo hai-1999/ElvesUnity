@@ -387,10 +387,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1867511556}
   - {fileID: 174193869}
-  - {fileID: 759010017}
+  - {fileID: 1867511556}
   - {fileID: 1650267267}
+  - {fileID: 759010017}
   m_Father: {fileID: 319877805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -811,6 +811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995a269ae61895b4791c548c08da580a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hud: {fileID: 1867511557}
   isPlayerUnit: 0
 --- !u!114 &174193867
 MonoBehaviour:
@@ -1157,9 +1158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyUnit: {fileID: 174193866}
-  enemyHud: {fileID: 1867511557}
   playerUnit: {fileID: 1650267270}
-  playerHud: {fileID: 759010020}
   dialogBox: {fileID: 367725306}
   PartyBag: {fileID: 2012280055}
 --- !u!1 &337525134
@@ -8812,6 +8811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995a269ae61895b4791c548c08da580a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hud: {fileID: 759010020}
   isPlayerUnit: 1
 --- !u!1 &1823915234
 GameObject:

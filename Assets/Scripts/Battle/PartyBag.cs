@@ -17,7 +17,6 @@ public class PartyBag : MonoBehaviour
 
     public void SetPartyData(List<Elves> elves)
     {
-
         this.elves = elves;
 
         for (int i = 0; i < partyMembers.Length; i++)
